@@ -1,8 +1,0 @@
-python -m frontend.habitacion
-python -m frontend.hoteles
-python -m frontend.huespedes
-python -m frontend.login
-python -m frontend.piso
-python -m frontend.reserva
-python -m frontend.servicio
-python -m frontend.todos
