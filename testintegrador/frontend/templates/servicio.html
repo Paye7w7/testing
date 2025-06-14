@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smoke Test Selenium</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='estilo.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Smoke Test Selenium</h1>
+            <p>Pruebas automatizadas para crear Servicios</p>
+        </div>
+        
+        <form method="POST" class="test-form" id="testForm">
+            <button type="submit" class="btn-test" id="testBtn">
+                <span class="icon">🚀</span>
+                Iniciar Testeo
+            </button>
+        </form>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <div class="loading-text">Ejecutando pruebas... Por favor espere</div>
+        </div>
+        
+        {% if resultado %}
+        <div class="results">
+            <h2>Resultado del Testeo</h2>
+            
+            <div class="info-grid">
+                <div class="info-card">
+                    <strong>Duración</strong>
+                    <span>{{ duracion }}s</span>
+                </div>
+                <div class="info-card">
+                    <strong>Fecha y Hora</strong>
+                    <span>{{ fecha_hora }}</span>
+                </div>
+            </div>
+            
+            <pre>{{ resultado }}</pre>
+            
+            <div class="success-message">
+                <span class="icon">📧</span>
+                <strong>¡Reporte enviado!</strong> Se envió un correo electrónico con el reporte detallado y las capturas de pantalla.
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    
+    <script>
+        document.getElementById('testForm').addEventListener('submit', function(e) {
+            const btn = document.getElementById('testBtn');
+            const loading = document.getElementById('loading');
+            
+            btn.disabled = true;
+            btn.innerHTML = '<span class="icon">⏳</span>Testeando...';
+            loading.classList.add('show');
+            
+            loading.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+        
+        /* {% if resultado %} */
+        window.addEventListener('load', function() {
+            const results = document.querySelector('.results');
+            if (results) {
+                setTimeout(() => {
+                    results.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 500);
+            }
+        });
+        /* {% endif %} */
+    </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Selector de Test</title>
+</head>
+<body>
+    <h1>Selecciona un Test para Ejecutar</h1>
+    <ul>
+        {% for test in test_routes %}
+            <li><a href="{{ test.path }}">{{ test.name }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

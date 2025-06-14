@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Test de Regresión Login</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        #resultado { white-space: pre-wrap; background: #f4f4f4; padding: 15px; border-radius: 5px; margin-top: 20px; max-height: 400px; overflow-y: auto;}
+        #capturas img { max-width: 200px; margin: 5px; border: 1px solid #ccc; }
+        #loading { display: none; font-weight: bold; color: #007bff; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Test de Regresión - Login</h1>
+    <button id="startTestBtn">Iniciar testeo de regresión en login</button>
+    <div id="loading">Ejecutando test, por favor espere...</div>
+    <div id="resultado"></div>
+    <div id="capturas"></div>
+
+<script>
+    const btn = document.getElementById("startTestBtn");
+    const loading = document.getElementById("loading");
+    const resultadoDiv = document.getElementById("resultado");
+    const capturasDiv = document.getElementById("capturas");
+
+    btn.addEventListener("click", () => {
+        btn.disabled = true;
+        resultadoDiv.textContent = "";
+        capturasDiv.innerHTML = "";
+        loading.style.display = "block";
+
+        fetch("/run_test", { method: "POST" })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "started") {
+                // Empezar a chequear resultado cada 2 seg
+                const intervalId = setInterval(() => {
+                    fetch("/get_results")
+                    .then(res => res.json())
+                    .then(r => {
+                        if (r.status === "finished") {
+                            clearInterval(intervalId);
+                            loading.style.display = "none";
+                            btn.disabled = false;
+                            resultadoDiv.textContent = r.resultados;
+                            capturasDiv.innerHTML = "";
+                            r.capturas.forEach(url => {
+                                const img = document.createElement("img");
+                                img.src = "/" + url.replace(/\\/g, "/");
+                                capturasDiv.appendChild(img);
+                            });
+                        }
+                    });
+                }, 2000);
+            } else {
+                alert("El test ya está en ejecución, espere por favor.");
+                btn.disabled = false;
+                loading.style.display = "none";
+            }
+        });
+    });
+</script>
+</body>
+</html>
